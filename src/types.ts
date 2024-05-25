@@ -8,10 +8,10 @@ export type Rule = {
 }
 
 export type GroupId = string
-
+export type Operator = 'and' | 'or'
 export type Group = {
   id: GroupId
-  operator: 'and' | 'or'
+  operator: Operator 
   rules: Rule[]
   groups: Group[]
 }

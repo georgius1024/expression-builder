@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
 
-import type { Rule, Group, AddRuleEvent, UpdateRuleEvent, RemoveRuleEvent, } from './types';
+import type { Rule, Group, AddRuleEvent, UpdateRuleEvent, RemoveRuleEvent, UpdateGroupEvent, RemoveGroupEvent, AddGroupEvent, } from './types';
 import RuleEditor from './RuleEditor';
+import GroupEditor from './GroupEditor';
 
 type RulesListProps = {
   rules: Rule[];
@@ -9,6 +10,9 @@ type RulesListProps = {
   onUpdateRule: UpdateRuleEvent;
   onRemoveRule: RemoveRuleEvent;
   onAddRule: AddRuleEvent;
+  onUpdateGroup: UpdateGroupEvent;
+  onRemoveGroup: RemoveGroupEvent;
+  onAddGroup: AddGroupEvent;
 };
 
 export default function RulesList(props: RulesListProps): ReactElement {
@@ -22,6 +26,17 @@ export default function RulesList(props: RulesListProps): ReactElement {
         </div>
       ))
     }
-    <button className="add add-rule" onClick={props.onAddRule}>Add rule</button>
+    {
+      props.groups.map(group => (
+        <div className="rule-item">
+          <GroupEditor group={group} onUpdate={props.onUpdateGroup} />
+          <span className="remove" onClick={() => props.onRemoveGroup(group.id)}>&times;</span>
+        </div>
+      ))
+    }
+    <div className="actions">
+      <button className="add add-rule" onClick={props.onAddRule}>Add rule</button>
+      <button className="add add-group" onClick={props.onAddGroup}>Add group</button>
+    </div>
   </div>);
 }

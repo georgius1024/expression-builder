@@ -15,6 +15,22 @@
   }
 }
 
+.group-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid #777;
+  padding: 20px;
+
+  .operator-editor {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+  }
+}
+
 .expression {
   border-top: 1px solid #ccc;
   margin-top: 32px;
@@ -24,14 +40,13 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid #777;
-  padding: 20px;
   .rule-item {
-    border-left: 1px solid #777;
+    /* border-left: 1px solid #777; */
     display: flex;
     flex-direction: row;
     gap: 20px;
     justify-content: stretch;
+    align-items: center;
   }
   .remove {
     background-color: #ccc;
@@ -43,7 +58,14 @@
     align-items: center;
     justify-content: center;
   }
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: stretch;
+  }
   .add {
     box-shadow: 2px 2px 5px #333;
+    width: auto;
   }
 }
