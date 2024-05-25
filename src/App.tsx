@@ -6,14 +6,14 @@ import type {Group,  Rule, } from './types';
 import GroupEditor from './GroupEditor';
 
 function getRuleExpression(rule: Rule): string {
-  return `(${rule.field} ${rule.expression} ${rule.value})`;
+  return `${rule.field} ${rule.expression} ${rule.value}`;
 }
 
 function getGroupExpression(group: Group): string {
   return [
     ...group.rules.map(getRuleExpression),
-    ...group.groups.map(getGroupExpression).map(e => `(${e})`)
-  ].join(` ${group.operator} `)
+    ...group.groups.map(getGroupExpression)
+  ].map(e => `(${e})`).join(` ${group.operator} `)
 }
 
 function App() {
@@ -33,37 +33,10 @@ function App() {
     updateRoot(root);
   }, []);
   if (!root) return // Nothing to render without root
-  // const onUpdateRule: UpdateRuleEvent = (rule: Rule) => {
-  //   const updatedRules = root.rules.map(e =>
-  //     e.id === rule.id ? rule : e
-  //   );
-  //   const updated: Group = { ...root, rules: updatedRules };
-  //   updateRoot(updated);
-  //   console.log(rule);
-  // };
-
-  // const onAddRule: AddRuleEvent = () => {
-  //   const updatedRules = [...root.rules, {
-  //     id: nanoid(),
-  //     field: '',
-  //     expression: '',
-  //     value: ''
-  //   }]
-  //   const updated: Group = { ...root, rules: updatedRules };
-  //   updateRoot(updated);
-  // }
-
-  // const onRemoveRule: RemoveRuleEvent = (id: RuleId) => {
-  //   const updatedRules = root.rules.filter(e => e.id !== id);
-  //   const updated: Group = { ...root, rules: updatedRules };
-  //   updateRoot(updated);
-  // }
   return (
     <>
-      <h1>Hello there!!!</h1>
+      <h1>Rules editor</h1>
       <GroupEditor group={root} onUpdate={updateRoot} />
-      <hr/>
-
       <div className='expression'>
         {
           getGroupExpression(root)
