@@ -2,11 +2,12 @@ import { ReactElement, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Button, Dropdown } from 'flowbite-react'
 import { defaultRule, defaultGroup } from '@/components/expressions/utils'
+import { ReactSortable } from 'react-sortablejs'
 import trashIcon from '@assets/icons/close.svg'
 import plusIcon from '@assets/icons/plus.svg'
 import eventIcon from '@assets/icons/radar.svg'
 import userIcon from '@assets/icons/account.svg'
-
+import dragIcon from '@assets/icons/drag.svg'
 import RuleEditor from '@/components/expressions/RuleEditor'
 
 import type {
@@ -80,6 +81,15 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
     const updated: Group = { ...props.group, groups: updatedGroups }
     props.onUpdate(updated)
   }
+  const updateRulesOrder = (rules: Rule[]): void => {
+    const updated: Group = { ...props.group, rules }
+    props.onUpdate(updated)
+  }
+
+  const updateGroupsOrder = (groups: Group[]): void => {
+    const updated: Group = { ...props.group, groups }
+    props.onUpdate(updated)
+  }
 
   type OnClick = () => void
 
@@ -135,25 +145,38 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
         <Button outline size="xs" onClick={onAddGroup}>
           <img src={plusIcon} className="size-4" /> Add group
         </Button>
-        {props.onRemove && (
-          <Button
-            outline
-            size="xs"
-            color="failure"
+        <div className='grow'/>
+        {props.nested && (
+          <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
+        )}
+
+        {props.nested && (
+          <RemoveWidget
             onClick={() => props.onRemove && props.onRemove(props.group.id)}
-          >
-            <img src={trashIcon} className="size-4" alt="" />
-            Remove group
-          </Button>
+          />
         )}
       </div>
-      <div className="flex flex-col gap-4">
+
+      <ReactSortable
+        handle=".handle"
+        className="flex flex-col gap-4"
+        list={props.group.rules}
+        setList={updateRulesOrder}
+      >
         {props.group.rules.map((rule) => (
           <div className="flex flex-row items-center gap-2" key={rule.id}>
             <RuleEditor rule={rule} onUpdate={onUpdateRule} className="grow" />
+            <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
             <RemoveWidget onClick={() => onRemoveRule(rule.id)} />
           </div>
         ))}
+      </ReactSortable>
+      <ReactSortable
+        handle=".handle"
+        className="flex flex-col gap-4"
+        list={props.group.groups}
+        setList={updateGroupsOrder}
+      >
         {props.group.groups.map((group) => (
           <div className="flex flex-row items-center gap-4" key={group.id}>
             <GroupEditor
@@ -165,7 +188,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
             />
           </div>
         ))}
-      </div>
+      </ReactSortable>
     </div>
   )
 }

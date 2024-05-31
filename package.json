@@ -15,7 +15,8 @@
     "flowbite-react": "^0.9.0",
     "nanoid": "^5.0.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-sortablejs": "^6.1.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.13",
