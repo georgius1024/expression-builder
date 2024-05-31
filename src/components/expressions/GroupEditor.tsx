@@ -82,7 +82,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
     props.onUpdate(updated)
   }
   const updateRulesOrder = (rules: Rule[]): void => {
-    const updated: Group = { ...props.group, rules }
+    const updated: Group = { ...props.group, rules: [...rules] }
     props.onUpdate(updated)
   }
 
@@ -145,6 +145,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
         <Button outline size="xs" onClick={onAddGroup}>
           <img src={plusIcon} className="size-4" /> Add group
         </Button>
+
         <div className='grow'/>
         {props.nested && (
           <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
@@ -171,6 +172,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           </div>
         ))}
       </ReactSortable>
+
       <ReactSortable
         handle=".handle"
         className="flex flex-col gap-4"

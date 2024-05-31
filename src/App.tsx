@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-import "./App.scss";
-import type { Group } from "@/components/expressions/types";
-import GroupEditor from "@/components/expressions/GroupEditor";
+import './App.scss'
+import type { Group } from '@/components/expressions/types'
+import GroupEditor from '@/components/expressions/GroupEditor'
 import {
   defaultGroup,
-  getGroupExpression,
-} from "./components/expressions/utils";
+  getGroupExpression
+} from './components/expressions/utils'
 
 function App() {
-  const [root, updateRoot] = useState<Group>(defaultGroup());
+  const [root, updateRoot] = useState<Group>(defaultGroup())
 
   return (
     <>
-      <h1 className="text-xl font-bold my-4">Rules editor</h1>
+      <h1 className="my-4 text-xl font-bold">Rules editor</h1>
       <GroupEditor
         group={root}
-        onUpdate={updateRoot}
+        onUpdate={(root: Group) => {
+          updateRoot(root), console.log(root)
+        }}
       />
-      <hr className="my-5"/>
+      <hr className="my-5" />
       <div className="font-mono">{getGroupExpression(root)}</div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
