@@ -1,10 +1,15 @@
 export type RuleId = string
-
+export type Field= string
+export type Expression= string
+export type Value = string | number | string[] | number[]
+export type Category = 'user' | 'event'
 export type Rule = {
+  category: Category
   id: RuleId
-  field: string
-  expression: string
-  value: string | number
+  not: boolean
+  field: Field
+  expression: Expression
+  value: Value
 }
 
 export type GroupId = string
@@ -16,7 +21,7 @@ export type Group = {
   groups: Group[]
 }
 
-export type AddRuleEvent = () => void
+export type AddRuleEvent = (category: Category) => void
 export type AddGroupEvent = () => void
 export type UpdateRuleEvent = (rule: Rule) => void
 export type UpdateGroupEvent = (group: Group) => void
