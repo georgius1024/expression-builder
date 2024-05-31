@@ -82,7 +82,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
     <div
       className={classNames(
         'flex flex-row items-center gap-2',
-        'border-s-2 border-solid border-gray-500 ps-2',
+        'rounded-md border-s-2 border-solid border-gray-500 ps-2 py-1',
         props.className
       )}
     >

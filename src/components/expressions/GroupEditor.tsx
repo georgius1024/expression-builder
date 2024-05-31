@@ -110,7 +110,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
       className={classNames(
         'flex flex-col gap-4',
         {
-          'border-s-2 border-solid border-gray-500 ps-2': props.nested
+          'border-s-2 rounded-md border-solid border-gray-500 ps-2 py-1': props.nested
         },
         props.className
       )}
