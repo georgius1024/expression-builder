@@ -13,12 +13,13 @@ function App() {
 
   return (
     <>
-      <h1>Rules editor</h1>
+      <h1 className="text-xl font-bold my-4">Rules editor</h1>
       <GroupEditor
         group={root}
         onUpdate={updateRoot}
       />
-      <div className="expression">{getGroupExpression(root)}</div>
+      <hr className="my-5"/>
+      <div className="font-mono">{getGroupExpression(root)}</div>
     </>
   );
 }

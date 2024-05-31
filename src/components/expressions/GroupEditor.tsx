@@ -33,6 +33,10 @@ type GroupEditorProps = {
 }
 
 export default function GroupEditor(props: GroupEditorProps): ReactElement {
+  const toggleOperator = () =>
+    props.group.operator === 'and'
+      ? updateOperator('or')
+      : updateOperator('and')
   const updateOperator = (operator: Operator) => {
     const updated = { ...props.group, operator }
     props.onUpdate(updated)
@@ -96,12 +100,53 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
       className={classNames(
         'flex flex-col gap-4',
         {
-          'ml-3 rounded-lg border border-solid border-gray-300 p-3':
-            props.nested
+          'border-s-2 border-solid border-gray-500 ps-2': props.nested
         },
         props.className
       )}
     >
+      <div className="flex flex-row gap-2">
+        <Button outline size="xs" className="w-10" onClick={toggleOperator}>
+          {props.group.operator === 'and' ? 'AND' : 'OR'}
+        </Button>
+
+        <Dropdown
+          label=""
+          renderTrigger={() => (
+            <Button outline size="xs">
+              <img src={plusIcon} className="size-4" /> Add rule
+            </Button>
+          )}
+        >
+          <Dropdown.Item onClick={() => onAddRule('user')}>
+            <div className="flex flex-row items-center gap-2">
+              <img src={userIcon} className="size-4" />
+              User
+            </div>
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => onAddRule('event')}>
+            <div className="flex flex-row items-center gap-2">
+              <img src={eventIcon} className="size-4" />
+              Event
+            </div>
+          </Dropdown.Item>
+        </Dropdown>
+
+        <Button outline size="xs" onClick={onAddGroup}>
+          <img src={plusIcon} className="size-4" /> Add group
+        </Button>
+        {props.onRemove && (
+          <Button
+            outline
+            size="xs"
+            color="failure"
+            onClick={() => props.onRemove && props.onRemove(props.group.id)}
+          >
+            <img src={trashIcon} className="size-4" alt="" />
+            Remove group
+          </Button>
+        )}
+      </div>
       <div className="flex flex-col gap-4">
         {props.group.rules.map((rule) => (
           <div className="flex flex-row items-center gap-2" key={rule.id}>
@@ -110,7 +155,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           </div>
         ))}
         {props.group.groups.map((group) => (
-          <div className="flex flex-row items-center gap-2" key={group.id}>
+          <div className="flex flex-row items-center gap-4" key={group.id}>
             <GroupEditor
               group={group}
               onUpdate={onUpdateGroup}
@@ -120,59 +165,6 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
             />
           </div>
         ))}
-        <div className="flex flex-row gap-4">
-          <Dropdown
-            label=""
-            renderTrigger={() => (
-              <Button outline className='w-20'>
-                {props.group.operator === 'and' ? 'AND' : 'OR'}
-              </Button>
-            )}
-          >
-            <Dropdown.Item onClick={() => updateOperator('and')}>
-              And
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => updateOperator('or')}>
-              Or
-            </Dropdown.Item>
-          </Dropdown>
-
-          <Dropdown
-            label=""
-            renderTrigger={() => (
-              <Button outline>
-                <img src={plusIcon} className="size-5" /> Add rule
-              </Button>
-            )}
-          >
-            <Dropdown.Item onClick={() => onAddRule('user')}>
-              <div className="flex flex-row items-center gap-2">
-                <img src={userIcon} className="size-4" />
-                User
-              </div>
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => onAddRule('event')}>
-              <div className="flex flex-row items-center gap-2">
-                <img src={eventIcon} className="size-4" />
-                Event
-              </div>
-            </Dropdown.Item>
-          </Dropdown>
-
-          <Button outline onClick={onAddGroup}>
-            <img src={plusIcon} className="size-5" /> Add group
-          </Button>
-          {props.onRemove && (
-            <Button
-              outline
-              color="failure"
-              onClick={() => props.onRemove && props.onRemove(props.group.id)}
-            >
-              <img src={trashIcon} className="size-5" alt="" />
-              Remove group
-            </Button>
-          )}
-        </div>
       </div>
     </div>
   )
