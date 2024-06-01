@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
 import './App.scss'
-import type { Group } from '@/components/expressions/types'
-import GroupEditor from '@/components/expressions/GroupEditor'
+import type { Group } from '@/components/expressions2/types'
+import GroupEditor from '@/components/expressions2/GroupEditor'
 import {
   defaultGroup,
   getGroupExpression
-} from './components/expressions/utils'
+} from './components/expressions2/utils'
 
 function App() {
   const [root, updateRoot] = useState<Group>(defaultGroup())
