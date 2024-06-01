@@ -10,6 +10,7 @@ import plusIcon from '@assets/icons/plus.svg'
 import eventIcon from '@assets/icons/radar.svg'
 import userIcon from '@assets/icons/account.svg'
 import dragIcon from '@assets/icons/drag.svg'
+import groupIcon from '@assets/icons/group.svg'
 
 import type {
   Rule,
@@ -35,7 +36,7 @@ type GroupEditorProps = {
 
 export default function GroupEditor(props: GroupEditorProps): ReactElement {
   const [dragging, setDragging] = useState<boolean>(false)
-   const toggleOperator = () =>
+  const toggleOperator = () =>
     props.group.operator === 'and'
       ? updateOperator('or')
       : updateOperator('and')
@@ -112,7 +113,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           'rounded-md border-s-2 border-solid border-gray-500 py-1 ps-2':
             props.nested
         },
-        
+
         props.className
       )}
     >
@@ -124,59 +125,69 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
         <Dropdown
           label=""
           renderTrigger={() => (
-            <Button outline size="xs">
-              <img src={plusIcon} className="size-4" /> Add rule
+            <Button outline pill size="xs">
+              <img src={plusIcon} className="size-4" />
             </Button>
           )}
         >
+          <Dropdown.Header>
+            <div className="text-md text-left font-bold">Add</div>
+          </Dropdown.Header>
+
           <Dropdown.Item onClick={() => onAddRule('user')}>
             <div className="flex flex-row items-center gap-2">
               <img src={userIcon} className="size-4" />
               User
             </div>
           </Dropdown.Item>
+
           <Dropdown.Item onClick={() => onAddRule('event')}>
             <div className="flex flex-row items-center gap-2">
               <img src={eventIcon} className="size-4" />
               Event
             </div>
           </Dropdown.Item>
-        </Dropdown>
 
-        <Button outline size="xs" onClick={onAddGroup}>
-          <img src={plusIcon} className="size-4" /> Add group
-        </Button>
+          <Dropdown.Divider />
+
+          <Dropdown.Item onClick={onAddGroup}>
+            <div className="flex flex-row items-center gap-2">
+              <img src={groupIcon} className="size-4" />
+              Nested group
+            </div>
+          </Dropdown.Item>
+        </Dropdown>
 
         <div className="grow" />
         {props.nested && (
-          <img src={dragIcon} className="handle ms-2 w-6 me-11 cursor-pointer" />
-        )}
-
-        {/* {props.nested && (
-          <RemoveWidget
-            onClick={() => props.onRemove && props.onRemove(props.group.id)}
+          <img
+            src={dragIcon}
+            className="handle mx-2 w-6 cursor-pointer"
           />
-        )} */}
+        )}
       </div>
 
       <ReactSortable
         handle=".handle"
-        className={classNames("flex flex-col gap-4", {'bg-gray-200': dragging},)}
+        className={classNames('flex flex-col gap-4 py-0', {
+          'bg-gray-100 py-4': dragging
+        },
+      'transition-all ease-linear duration-200')}
         list={props.group.entries}
         setList={onUpdateOrder}
-        onStart={()=>setDragging(true)}
-        onEnd={()=>setDragging(false)}
+        onStart={() => setDragging(true)}
+        onEnd={() => setDragging(false)}
       >
         {props.group.entries.map((e) => {
           if (e.type === 'rule') {
             return (
               <div className="flex flex-row items-center gap-2" key={e.id}>
                 <RuleEditor rule={e} onUpdate={onUpdateRule} className="grow" />
+                <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
                 <img
                   src={dragIcon}
                   className="handle mx-2 w-6 cursor-pointer"
                 />
-                <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
               </div>
             )
           }
