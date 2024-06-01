@@ -17,7 +17,8 @@ function App() {
       <GroupEditor
         group={root}
         onUpdate={(root: Group) => {
-          updateRoot(root), console.log(root)
+          updateRoot(root)
+          //console.log(root)
         }}
       />
       <hr className="my-5" />

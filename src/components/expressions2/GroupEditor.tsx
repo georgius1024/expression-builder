@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import classNames from 'classnames'
 import { Button, Dropdown } from 'flowbite-react'
 import RuleEditor from '@/components/expressions2/RuleEditor'
@@ -34,7 +34,8 @@ type GroupEditorProps = {
 }
 
 export default function GroupEditor(props: GroupEditorProps): ReactElement {
-  const toggleOperator = () =>
+  const [dragging, setDragging] = useState<boolean>(false)
+   const toggleOperator = () =>
     props.group.operator === 'and'
       ? updateOperator('or')
       : updateOperator('and')
@@ -111,6 +112,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           'rounded-md border-s-2 border-solid border-gray-500 py-1 ps-2':
             props.nested
         },
+        
         props.className
       )}
     >
@@ -147,21 +149,23 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
 
         <div className="grow" />
         {props.nested && (
-          <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
+          <img src={dragIcon} className="handle ms-2 w-6 me-11 cursor-pointer" />
         )}
 
-        {props.nested && (
+        {/* {props.nested && (
           <RemoveWidget
             onClick={() => props.onRemove && props.onRemove(props.group.id)}
           />
-        )}
+        )} */}
       </div>
 
       <ReactSortable
         handle=".handle"
-        className="flex flex-col gap-4"
+        className={classNames("flex flex-col gap-4", {'bg-gray-200': dragging},)}
         list={props.group.entries}
         setList={onUpdateOrder}
+        onStart={()=>setDragging(true)}
+        onEnd={()=>setDragging(false)}
       >
         {props.group.entries.map((e) => {
           if (e.type === 'rule') {
