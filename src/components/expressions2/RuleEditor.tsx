@@ -108,26 +108,6 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
     }
     return 'the editor'
   }
-  // const inverse = () => {
-  //   props.onUpdate({ ...props.rule, not: !props.rule.not })
-  // }
-
-  // const expressionPickerOptions = expressionsList(props.rule.field).map(
-  //   (expression) => (
-  //     <option value={expression} key={expression}>
-  //       {expressionLabel(expression)}
-  //     </option>
-  //   )
-  // )
-  // const valueInputType = valueType(props.rule.field, props.rule.expression)
-
-  // const buildInputPickerOptions = () =>
-  //   Array.isArray(valueInputType) &&
-  //   valueInputType.map((e) => (
-  //     <option value={e} key={e}>
-  //       {e}
-  //     </option>
-  //   ))
   return (
     <div
       className={classNames(
@@ -165,56 +145,12 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
       >
         {fieldPickerOptions}
       </Select>
+      
       {props.rule.field && (
         <ExpressionPicker rule={props.rule} onUpdate={props.onUpdate} />
       )}
+
       {editor()}
-      {/* <div className="flex items-center gap-2">
-        <Checkbox
-          id={`rule-${props.rule.id}-inversion`}
-          disabled={!props.rule.field}
-          checked={props.rule.not}
-          onChange={inverse}
-        />
-        <Label
-          htmlFor={`rule-${props.rule.id}-inversion`}
-          disabled={!props.rule.field}
-        >
-          NOT
-        </Label>
-      </div>
-      <Select
-        disabled={!props.rule.field}
-        value={props.rule.expression}
-        onChange={(e) => updateField('expression', e)}
-        className="w-1/3"
-        required
-      >
-        {expressionPickerOptions}
-      </Select>
-      {(valueInputType === 'text' || valueInputType === 'number') && (
-        <TextInput
-          disabled={!props.rule.expression}
-          className="grow"
-          type={valueInputType}
-          placeholder={
-            props.rule.expression && expressionLabel(props.rule.expression)
-          }
-          required
-          value={String(props.rule.value)}
-          onChange={(e) => updateField('value', e)}
-        />
-      )}
-      {Array.isArray(valueInputType) && (
-        <Select
-          disabled={!props.rule.expression}
-          onChange={(e) => updateField('value', e)}
-          className="grow"
-          required
-        >
-          {buildInputPickerOptions()}
-        </Select>
-      )} */}
     </div>
   )
 }
