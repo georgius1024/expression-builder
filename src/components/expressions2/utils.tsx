@@ -39,10 +39,11 @@ export function categoryName(category: Category): string {
 }
 
 export function fieldsList(category: Category): Field[] {
-  if (category === 'customer') return ['category', 'country', 'salesLastMonth']
+  if (category === 'customer')
+    return ['name', 'category', 'country', 'salesLastMonth']
   if (category === 'product')
     return ['name', 'price', 'manufacturer', 'category', 'sku']
-  return ['URL', 'source', 'campaign', 'event', '']
+  return []
 }
 
 export function fieldLabel(field: Field): string | undefined {
@@ -66,17 +67,28 @@ export function expressionsList(
   switch (field) {
     case 'name':
     case 'country':
-    case 'URL':
-    case 'source':
-    case 'campaign':
+    case 'manufacturer':
       return ['=', '^=', '$=', '*=']
     case 'category':
+    case 'sku':
       return ['is']
     case 'age':
-      case 'salesLastMonth':
+    case 'salesLastMonth':
       return ['=', '>', '<']
   }
   return []
+}
+
+export function customerCategories(): string[] {
+  return ['Loyal', 'New', 'Valuable', 'Active', 'At risk']
+}
+
+export function productCategories(): string[] {
+  return ['Manufactiring', 'Logistic', 'Medical', 'Service', 'Educational']
+}
+
+export function productSkuList(): string[] {
+  return ['ABC-124', 'DEF-321', 'IJK-853']
 }
 
 export function expressionLabel(expression: Expression): string {
@@ -169,12 +181,28 @@ export function defaultField(category: Category): Field {
   return rule
 }
 
-export function defaultExpression(category: Category, field: Field): Expression {
+export function defaultExpression(
+  category: Category,
+  field: Field
+): Expression {
   const [expresion] = expressionsList(category, field)
   return expresion
 }
 
-export function defaultValue(_category: Category, field: Field, expresion: Expression): Value {
+export function defaultValue(
+  category: Category,
+  field: Field,
+  expresion: Expression
+): Value {
+  if (field === 'category') {
+    const [first] =
+      category === 'customer' ? customerCategories() : productCategories()
+    return first
+  }
+  if (field === 'sku') {
+    const [first] = productSkuList()
+    return first
+  }
   const valueInputType = valueType(field, expresion)
   if (Array.isArray(valueInputType)) return valueInputType[0]
   return valueInputType === 'number' ? 0 : ''
@@ -192,7 +220,11 @@ export function defaultRule(category?: Category): Rule {
   const selectedCategory = category ?? 'customer'
   const selectedField = defaultField(selectedCategory)
   const selectedExpression = defaultExpression(selectedCategory, selectedField)
-  const selectedValue = defaultValue(selectedCategory, selectedField, selectedExpression)
+  const selectedValue = defaultValue(
+    selectedCategory,
+    selectedField,
+    selectedExpression
+  )
   return {
     type: 'rule',
     operator: 'and',

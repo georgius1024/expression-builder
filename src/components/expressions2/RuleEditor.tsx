@@ -3,7 +3,8 @@ import classNames from 'classnames'
 import { Select, Dropdown } from 'flowbite-react'
 
 import ExpressionPicker from '@/components/expressions2/editors/ExpressionPicker'
-
+import SingleValueInput from './editors/SingleValueInput'
+import SingleValueSelect from './editors/SingleValueSelect'
 import type {
   Category,
   Rule,
@@ -14,7 +15,10 @@ import {
   fieldLabel,
   withDefaults,
   categoryIcon,
-  categoryName
+  categoryName,
+  customerCategories,
+  productCategories,
+  productSkuList
 } from '@/components/expressions2/utils'
 
 type RuleEditorProps = {
@@ -61,6 +65,47 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
   ))
 
   const editor = (): ReactNode => {
+    switch (props.rule.field) {
+      case 'name':
+      case 'country':
+      case 'manufacturer':
+        return (
+          <SingleValueInput
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            inputType="text"
+          />
+        )
+      case 'category':
+        return (
+          <SingleValueSelect
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            options={
+              props.rule.category === 'customer'
+                ? customerCategories()
+                : productCategories()
+            }
+          />
+        )
+      case 'sku':
+        return (
+          <SingleValueSelect
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            options={productSkuList()}
+          />
+        )
+      case 'salesLastMonth':
+      case 'price':
+        return (
+          <SingleValueInput
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            inputType="number"
+          />
+        )
+    }
     return 'the editor'
   }
   // const inverse = () => {
