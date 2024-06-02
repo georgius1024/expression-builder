@@ -1,40 +1,30 @@
-import { ReactElement, ChangeEvent, ReactNode } from 'react'
+import { ReactElement, ChangeEvent } from 'react'
 import classNames from 'classnames'
-import { Select, Dropdown } from 'flowbite-react'
-
-import ExpressionPicker from '@/components/expressions2/editors/ExpressionPicker'
+import { Select, TextInput, Checkbox, Label, Dropdown } from 'flowbite-react'
 
 import type {
-  Category,
   Rule,
   UpdateRuleEvent
 } from '@/components/expressions2/types'
+
 import {
   fieldsList,
   fieldLabel,
-  withDefaults,
-  categoryIcon,
-  categoryName
+  expressionsList,
+  expressionLabel,
+  withDefaults
 } from '@/components/expressions2/utils'
 
-type RuleEditorProps = {
+type ValueType = "string" | "number"
+
+type SingleValueEditorProps = {
   rule: Rule
+  valueType: ValueType
   onUpdate: UpdateRuleEvent
   className?: string
 }
 
-export default function RuleEditor(props: RuleEditorProps): ReactElement {
-  const updateCategory = (category: Category) => {
-    props.onUpdate(
-      withDefaults({
-        ...props.rule,
-        category,
-        field: '',
-        expression: '',
-        value: ''
-      })
-    )
-  }
+export default function SingleValueEditor(props: SingleValueEditorProps): ReactElement {
 
   const updateField = (
     field: 'field' | 'expression' | 'value',
@@ -54,77 +44,41 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
     }
   }
 
+  const inverse = () => {
+    props.onUpdate({ ...props.rule, not: !props.rule.not })
+  }
+
   const fieldPickerOptions = fieldsList(props.rule.category).map((field) => (
     <option value={field} key={field}>
       {fieldLabel(field)}
     </option>
   ))
 
-  const editor = (): ReactNode => {
-    return 'the editor'
-  }
-  // const inverse = () => {
-  //   props.onUpdate({ ...props.rule, not: !props.rule.not })
-  // }
+  const expressionPickerOptions = expressionsList(props.rule.field).map(
+    (expression) => (
+      <option value={expression} key={expression}>
+        {expressionLabel(expression)}
+      </option>
+    )
+  )
 
-  // const expressionPickerOptions = expressionsList(props.rule.field).map(
-  //   (expression) => (
-  //     <option value={expression} key={expression}>
-  //       {expressionLabel(expression)}
-  //     </option>
-  //   )
-  // )
-  // const valueInputType = valueType(props.rule.field, props.rule.expression)
-
-  // const buildInputPickerOptions = () =>
-  //   Array.isArray(valueInputType) &&
-  //   valueInputType.map((e) => (
-  //     <option value={e} key={e}>
-  //       {e}
-  //     </option>
-  //   ))
   return (
     <div
       className={classNames(
         'flex flex-row items-center gap-2',
-        'rounded-md border-s-2 border-solid border-gray-500 py-1 ps-2',
+        'rounded-md border-s-2 border-solid border-gray-500 ps-2 py-1',
         props.className
       )}
     >
-      <Dropdown
-        label=""
-        renderTrigger={() => (
-          <div className="flex select-none place-content-center rounded-full border border-solid border-gray-300 p-2">
-            <img
-              src={categoryIcon(props.rule.category)}
-              className="size-5"
-              alt=""
-            />
-          </div>
-        )}
-      >
-        {(['customer', 'product'] as Category[]).map((c) => (
-          <Dropdown.Item onClick={() => updateCategory(c)}>
-            <div className="flex flex-row items-center gap-2">
-              <img src={categoryIcon(c)} className="size-4" />
-              {categoryName(c)}
-            </div>
-          </Dropdown.Item>
-        ))}
-      </Dropdown>
-
       <Select
         value={props.rule.field}
         onChange={(e) => updateField('field', e)}
+        className="w-1/3"
         required
       >
         {fieldPickerOptions}
       </Select>
-      {props.rule.field && (
-        <ExpressionPicker rule={props.rule} onUpdate={props.onUpdate} />
-      )}
-      {editor()}
-      {/* <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Checkbox
           id={`rule-${props.rule.id}-inversion`}
           disabled={!props.rule.field}
@@ -169,7 +123,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
         >
           {buildInputPickerOptions()}
         </Select>
-      )} */}
+      )}
     </div>
   )
 }
