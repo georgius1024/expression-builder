@@ -135,10 +135,17 @@ export function getRuleExpression(rule: Rule): string {
 
 export function getGroupExpression(group: Group): string {
   return [
-    ...group.entries.map(e => e.type ==='rule' ? getRuleExpression(e) : getGroupExpression(e)) 
-  ]
-    .map((e) => `(${e})`)
-    .join(` ${group.operator} `)
+    ...group.entries.map((e, index, list) => {
+      const isLast = index === list.length - 1
+
+      const expression =
+        e.type === 'rule' ? getRuleExpression(e) : getGroupExpression(e)
+      if (isLast) {
+        return `(${expression})`
+      }
+      return `(${expression}) ${e.operator}`
+    })
+  ].join(' ')
 }
 
 export function defaultField(category: Category): Field {
@@ -187,6 +194,6 @@ export function defaultGroup(): Group {
     type: 'group',
     operator: 'and',
     id: nanoid(),
-    entries: [defaultRule()],
+    entries: [defaultRule()]
   }
 }

@@ -21,7 +21,6 @@ import type {
   UpdateRuleEvent,
   UpdateGroupEvent,
   RemoveEntryEvent,
-  EntryOperator,
   EntryId,
   Category
 } from '@/components/expressions2/types'
@@ -36,12 +35,18 @@ type GroupEditorProps = {
 
 export default function GroupEditor(props: GroupEditorProps): ReactElement {
   const [dragging, setDragging] = useState<boolean>(false)
-  const toggleOperator = () =>
-    props.group.operator === 'and'
-      ? updateOperator('or')
-      : updateOperator('and')
-  const updateOperator = (operator: EntryOperator) => {
-    const updated = { ...props.group, operator }
+
+  const toggleOperator = (id: EntryId) => {
+    const updatedEntries: Entries = props.group.entries.map((e) => {
+      if (e.id === id) {
+        if (e.operator === 'and') {
+          return { ...e, operator: 'or' }
+        }
+        return { ...e, operator: 'and' }
+      }
+      return e
+    })
+    const updated: Group = { ...props.group, entries: updatedEntries }
     props.onUpdate(updated)
   }
 
@@ -87,7 +92,10 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
   }
 
   const onUpdateOrder = (entries: Entries): void => {
-    const updated: Group = { ...props.group, entries: [...entries] }
+    const updated: Group = {
+      ...props.group,
+      entries: [...entries].filter(Boolean)
+    }
     props.onUpdate(updated)
   }
 
@@ -118,10 +126,6 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
       )}
     >
       <div className="flex flex-row gap-2">
-        {/* <Button outline size="xs" className="w-10" onClick={toggleOperator}>
-          {props.group.operator === 'and' ? 'AND' : 'OR'}
-        </Button> */}
-
         <Dropdown
           label=""
           renderTrigger={() => (
@@ -160,50 +164,69 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
 
         <div className="grow" />
         {props.nested && (
-          <img
-            src={dragIcon}
-            className="handle mx-2 w-6 cursor-pointer"
-          />
+          <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
         )}
       </div>
 
       <ReactSortable
         handle=".handle"
-        className={classNames('flex flex-col gap-4 py-0', {
-          'bg-gray-100 py-4': dragging
-        },
-      'transition-all ease-linear duration-200')}
+        className={classNames(
+          'flex flex-col gap-2 py-0',
+          {
+            'bg-gray-100 py-4': dragging
+          },
+          'transition-all duration-200 ease-linear'
+        )}
         list={props.group.entries}
         setList={onUpdateOrder}
         onStart={() => setDragging(true)}
         onEnd={() => setDragging(false)}
       >
-        {props.group.entries.map((e) => {
-          if (e.type === 'rule') {
-            return (
-              <div className="flex flex-row items-center gap-2" key={e.id}>
-                <RuleEditor rule={e} onUpdate={onUpdateRule} className="grow" />
-                <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
-                <img
-                  src={dragIcon}
-                  className="handle mx-2 w-6 cursor-pointer"
-                />
+        {props.group.entries.map((e, index, list) => {
+          const isLast = index === list.length - 1
+          return (
+            <div className="flex flex-col gap-2" key={e.id}>
+              <div className="flex flex-row items-center gap-2">
+                {e.type === 'rule' && (
+                  <>
+                    <RuleEditor
+                      rule={e}
+                      onUpdate={onUpdateRule}
+                      className="grow"
+                    />
+                      <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
+                    <img
+                      src={dragIcon}
+                      className="handle mx-2 w-6 cursor-pointer"
+                    />
+                  </>
+                )}
+                {e.type === 'group' && (
+                  <GroupEditor
+                    group={e}
+                    onUpdate={onUpdateGroup}
+                    onRemove={() => onRemoveEntry(e.id)}
+                    nested
+                    className="grow"
+                  />
+                )}
               </div>
-            )
-          }
-          if (e.type === 'group') {
-            return (
-              <div className="flex flex-row items-center gap-2" key={e.id}>
-                <GroupEditor
-                  group={e}
-                  onUpdate={onUpdateGroup}
-                  onRemove={() => onRemoveEntry(e.id)}
-                  nested
-                  className="grow"
-                />
-              </div>
-            )
-          }
+              {!isLast && (
+                <Button
+                  outline
+                  size="xs"
+                  className={classNames(
+                    'my-0 w-10',
+                    { 'my-5': e.operator === 'or' },
+                    'transition-all duration-200 ease-linear'
+                  )}
+                  onClick={() => toggleOperator(e.id)}
+                >
+                  {e.operator === 'and' ? 'AND' : 'OR'}
+                </Button>
+              )}
+            </div>
+          )
         })}
       </ReactSortable>
     </div>
