@@ -8,42 +8,60 @@ import type {
 } from '@/components/expressions2/types'
 
 import { nanoid } from 'nanoid'
+import eventIcon from '@assets/icons/radar.svg'
+import userIcon from '@assets/icons/account.svg'
+import productIcon from '@assets/icons/purse.svg'
 
-export function fieldsList(category: Category, withEmpty?: boolean): Field[] {
-  if (category === 'user')
-    return ['name', 'country', 'gender', 'age', ''].filter(
-      (e) => withEmpty || e
-    )
-  return ['URL', 'source', 'campaign', 'event', ''].filter(
-    (e) => withEmpty || e
-  )
+function ucFirst(src: string): string {
+  const [first, ...rest] = src
+  return [first.toUpperCase(), ...rest].join('')
+}
+export function categoryIcon(category: Category): string {
+  switch (category) {
+    case 'customer':
+      return userIcon
+    case 'product':
+      return productIcon
+    default:
+      return eventIcon
+  }
+}
+
+export function categoryName(category: Category): string {
+  switch (category) {
+    case 'customer':
+      return 'Customer'
+    case 'product':
+      return 'Product'
+    default:
+      return category
+  }
+}
+
+export function fieldsList(category: Category): Field[] {
+  if (category === 'customer') return ['category', 'country', 'salesLastMonth']
+  if (category === 'product')
+    return ['name', 'price', 'manufacturer', 'category', 'sku']
+  return ['URL', 'source', 'campaign', 'event', '']
 }
 
 export function fieldLabel(field: Field): string | undefined {
   switch (field) {
-    case 'name':
-      return 'Name'
-    case 'country':
-      return 'Country'
-    case 'gender':
-      return 'Gender'
-    case 'age':
-      return 'Age'
+    case 'salesLastMonth':
+      return 'Last month sales'
     case 'URL':
       return 'Page URL'
     case 'source':
       return 'UTM source'
     case 'campaign':
       return 'UTM campaign'
-    case 'event':
-      return 'Event'
   }
-  return 'Field'
+  return ucFirst(field)
 }
 
 export function expressionsList(
-  field: Field,
-  withEmpty?: boolean
+  _category: Category,
+  field: Field
 ): Expression[] {
   switch (field) {
     case 'name':
@@ -51,12 +69,12 @@ export function expressionsList(
     case 'URL':
     case 'source':
     case 'campaign':
-      return ['=', '^=', '$=', '*=', ''].filter((e) => withEmpty || e)
-    case 'gender':
-    case 'event':
-      return ['is', ''].filter((e) => withEmpty || e)
+      return ['=', '^=', '$=', '*=']
+    case 'category':
+      return ['is']
     case 'age':
-      return ['=', '>', '<', ''].filter((e) => withEmpty || e)
+      case 'salesLastMonth':
+      return ['=', '>', '<']
   }
   return []
 }
@@ -84,14 +102,12 @@ export function expressionLabel(expression: Expression): string {
 
 export function valueType(
   field: Field,
-  _expression: Expression
+  _expression?: Expression
 ): 'text' | 'number' | string[] | undefined {
   switch (field) {
     case 'name':
     case 'country':
-    case 'URL':
-    case 'source':
-    case 'campaign':
+    default:
       return 'text'
     case 'age':
       return 'number'
@@ -153,30 +169,30 @@ export function defaultField(category: Category): Field {
   return rule
 }
 
-export function defaultExpression(field: Field): Expression {
-  const [expresion] = expressionsList(field)
+export function defaultExpression(category: Category, field: Field): Expression {
+  const [expresion] = expressionsList(category, field)
   return expresion
 }
 
-export function defaultValue(field: Field, expresion: Expression): Value {
+export function defaultValue(_category: Category, field: Field, expresion: Expression): Value {
   const valueInputType = valueType(field, expresion)
   if (Array.isArray(valueInputType)) return valueInputType[0]
   return valueInputType === 'number' ? 0 : ''
 }
 
 export function withDefaults(incomplete: Rule): Rule {
-  const category = incomplete.category || 'user'
+  const category = incomplete.category || 'customer'
   const field = incomplete.field || defaultField(category)
-  const expression = incomplete.expression || defaultExpression(field)
-  const value = incomplete.value || defaultValue(field, expression)
+  const expression = incomplete.expression || defaultExpression(category, field)
+  const value = incomplete.value || defaultValue(category, field, expression)
   return { ...incomplete, category, field, expression, value }
 }
 
 export function defaultRule(category?: Category): Rule {
-  const selectedCategory = category ?? 'user'
+  const selectedCategory = category ?? 'customer'
   const selectedField = defaultField(selectedCategory)
-  const selectedExpression = defaultExpression(selectedField)
-  const selectedValue = defaultValue(selectedField, selectedExpression)
+  const selectedExpression = defaultExpression(selectedCategory, selectedField)
+  const selectedValue = defaultValue(selectedCategory, selectedField, selectedExpression)
   return {
     type: 'rule',
     operator: 'and',

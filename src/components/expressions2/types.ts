@@ -13,15 +13,15 @@ export type Entry<T extends EntryType> = {
 
 export type Field = string
 export type Expression = string
-export type Value = string | number | string[] | number[]
-export type Category = 'user' | 'event'
+export type Value = string | number | Value[]
+export type Category = 'customer' | 'product'
 
 export type Rule = Entry<RuleType> & {
   category: Category
   not: boolean
   field: Field
-  expression: Expression
-  value: Value
+  expression?: Expression
+  value?: Value
 }
 
 export type Group = Entry<GroupType> & { entries: Entries }

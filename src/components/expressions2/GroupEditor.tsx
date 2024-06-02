@@ -2,13 +2,11 @@ import { ReactElement, ReactNode, useState } from 'react'
 import classNames from 'classnames'
 import { Button, Dropdown } from 'flowbite-react'
 import RuleEditor from '@/components/expressions2/RuleEditor'
-import { defaultRule, defaultGroup } from '@/components/expressions2/utils'
+import { defaultRule, defaultGroup, categoryIcon, categoryName } from '@/components/expressions2/utils'
 
 import { ReactSortable } from 'react-sortablejs'
 import trashIcon from '@assets/icons/close.svg'
 import plusIcon from '@assets/icons/plus.svg'
-import eventIcon from '@assets/icons/radar.svg'
-import userIcon from '@assets/icons/account.svg'
 import dragIcon from '@assets/icons/drag.svg'
 import groupIcon from '@assets/icons/group.svg'
 
@@ -137,21 +135,16 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           <Dropdown.Header>
             <div className="text-md text-left font-bold">Add</div>
           </Dropdown.Header>
-
-          <Dropdown.Item onClick={() => onAddRule('user')}>
-            <div className="flex flex-row items-center gap-2">
-              <img src={userIcon} className="size-4" />
-              User
-            </div>
-          </Dropdown.Item>
-
-          <Dropdown.Item onClick={() => onAddRule('event')}>
-            <div className="flex flex-row items-center gap-2">
-              <img src={eventIcon} className="size-4" />
-              Event
-            </div>
-          </Dropdown.Item>
-
+          {
+            (['customer', 'product'] as Category[]).map(c => (
+              <Dropdown.Item onClick={() => onAddRule(c)}>
+              <div className="flex flex-row items-center gap-2">
+                <img src={categoryIcon(c)} className="size-4" />
+                {categoryName(c)}
+              </div>
+            </Dropdown.Item>
+            ))
+          }
           <Dropdown.Divider />
 
           <Dropdown.Item onClick={onAddGroup}>
