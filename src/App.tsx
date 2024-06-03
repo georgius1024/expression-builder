@@ -3,17 +3,102 @@ import { useState } from 'react'
 import './App.scss'
 import type { Group } from '@/components/expressions2/types'
 import GroupEditor from '@/components/expressions2/GroupEditor'
-import {
-  defaultGroup,
-  getGroupExpression
-} from './components/expressions2/utils'
+import { getGroupExpression } from './components/expressions2/utils'
 
+const defaultValue: Group = {
+  id: 'root',
+  type: 'group',
+  operator: 'and',
+  entries: [
+    {
+      id: 'customer',
+      type: 'group',
+      operator: 'and',
+      entries: [
+        {
+          category: 'customer',
+          id: 'domestic',
+          type: 'rule',
+          operator: 'and',
+          field: 'country',
+          expression: '=',
+          not: false,
+          value: 'USA'
+        },
+        {
+          category: 'customer',
+          id: 'valuable',
+          type: 'rule',
+          operator: 'and',
+          field: 'category',
+          expression: 'is',
+          not: false,
+          value: 'Valuable'
+        }
+      ]
+    },
+    {
+      id: 'product',
+      type: 'group',
+      operator: 'and',
+      entries: [
+        {
+          category: 'product',
+          id: 'price',
+          type: 'rule',
+          operator: 'and',
+          field: 'price',
+          expression: '>',
+          not: false,
+          value: 2000
+        },
+        {
+          category: 'product',
+          id: 'med',
+          type: 'rule',
+          operator: 'and',
+          field: 'category',
+          expression: 'is',
+          not: false,
+          value: 'Service'
+        },
+      ]
+    },
+    {
+      id: 'order',
+      type: 'group',
+      operator: 'and',
+      entries: [
+        {
+          category: 'order',
+          id: 'amount',
+          type: 'rule',
+          operator: 'or',
+          field: 'amount',
+          expression: '>',
+          not: false,
+          value: 10000
+        },     
+        {
+          category: 'order',
+          id: 'payment',
+          type: 'rule',
+          operator: 'and',
+          field: 'paymentType',
+          expression: 'is',
+          not: true,
+          value: 'Credit'
+        },    
+      ]
+    }
+  ]
+}
 function App() {
-  const [root, updateRoot] = useState<Group>(defaultGroup())
+  const [root, updateRoot] = useState<Group>(defaultValue)
 
   return (
     <>
-      <h1 className="my-5 text-2xl font-bold text-left">Expression builder</h1>
+      <h1 className="my-5 text-left text-2xl font-bold">Expression builder</h1>
       <GroupEditor
         group={root}
         onUpdate={(root: Group) => {
@@ -21,7 +106,9 @@ function App() {
         }}
       />
       <hr className="my-5" />
-      <div className="font-mono text-left whitespace-pre">{getGroupExpression(root)}</div>
+      <div className="font-mono whitespace-pre-wrap text-left">
+        {getGroupExpression(root)}
+      </div>
     </>
   )
 }

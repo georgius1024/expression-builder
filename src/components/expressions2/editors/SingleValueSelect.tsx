@@ -21,6 +21,7 @@ export default function SingleValueSelect(
   return (
     <Select
       disabled={!props.rule.expression}
+      value={props.rule.value as string}
       onChange={updateValue}
       className={props.className}
       required

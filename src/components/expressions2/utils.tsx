@@ -84,7 +84,7 @@ export function expressionsList(
     case 'paymentType':
     case 'deliveryType':
       return ['is']
-    case 'age':
+    case 'price':
     case 'salesLastMonth':
     case 'amount':
       return ['=', '>', '<']
@@ -142,7 +142,9 @@ export function valueType(
     case 'country':
     default:
       return 'text'
-    case 'age':
+    case 'amount':
+    case 'price':
+    case 'salesLastMonth':
       return 'number'
     case 'gender':
       return ['male', 'female', 'other']
@@ -193,16 +195,13 @@ export function getGroupExpression(group: Group, level: number = 0): string {
       const isLast = index === list.length - 1
 
       const expression =
-        e.type === 'rule' ? `${getRuleExpression(e)}` : `(${getGroupExpression(e, level)})`
+        e.type === 'rule'
+          ? `${getRuleExpression(e)}`
+          : `(${getGroupExpression(e, level)})`
       if (isLast) {
         return `${pad}${expression}`
       }
-      if (e.operator === 'and') {
         return `${pad}${expression} ${e.operator} `
-      }
-      //const operator = e.operator === 'or' ? `${e.operator}\n` : e.operator
-      return `${pad}${expression}
-      ${pad}${e.operator}\n`
     })
   ].join('')
 }
