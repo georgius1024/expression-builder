@@ -151,6 +151,10 @@ export function valueType(
   }
 }
 
+export function getRulePrefixedField(rule: Rule): string {
+  return `${rule.category}.${rule.field}`
+}
+
 export function getRuleExpression(rule: Rule): string {
   if (rule.field && rule.expression && rule.value) {
     const getDirectExpession = (): string => {
@@ -158,21 +162,21 @@ export function getRuleExpression(rule: Rule): string {
         valueType(rule.field, rule.expression) === 'text' ||
         Array.isArray(valueType(rule.field, rule.expression))
       const value = useQuotesOnValue ? `"${rule.value}"` : rule.value
-
+      const field = getRulePrefixedField(rule)
       switch (rule.expression) {
         case '=':
         case '<':
         case '>':
         default:
-          return `${rule.field} ${rule.expression} ${value}`
+          return `${field} ${rule.expression} ${value}`
         case 'is':
-          return `${rule.field} = ${value}`
+          return `${field} = ${value}`
         case '^=':
-          return `${rule.field} like "${rule.value}%"`
+          return `${field} like "${rule.value}%"`
         case '$=':
-          return `${rule.field} like "%${rule.value}"`
+          return `${field} like "%${rule.value}"`
         case '*=':
-          return `${rule.field} like "%${rule.value}%"`
+          return `${field} like "%${rule.value}%"`
       }
     }
     if (rule.not) {
@@ -182,19 +186,25 @@ export function getRuleExpression(rule: Rule): string {
   return '?'
 }
 
-export function getGroupExpression(group: Group): string {
+export function getGroupExpression(group: Group, level: number = 0): string {
+  const pad = ' '.repeat(level * 2)
   return [
     ...group.entries.map((e, index, list) => {
       const isLast = index === list.length - 1
 
       const expression =
-        e.type === 'rule' ? getRuleExpression(e) : getGroupExpression(e)
+        e.type === 'rule' ? `${getRuleExpression(e)}` : `(${getGroupExpression(e, level)})`
       if (isLast) {
-        return `(${expression})`
+        return `${pad}${expression}`
       }
-      return `(${expression}) ${e.operator}`
+      if (e.operator === 'and') {
+        return `${pad}${expression} ${e.operator} `
+      }
+      //const operator = e.operator === 'or' ? `${e.operator}\n` : e.operator
+      return `${pad}${expression}
+      ${pad}${e.operator}\n`
     })
-  ].join(' ')
+  ].join('')
 }
 
 export function defaultField(category: Category): Field {

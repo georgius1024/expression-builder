@@ -13,16 +13,15 @@ function App() {
 
   return (
     <>
-      <h1 className="my-4 text-xl font-bold">Rules editor</h1>
+      <h1 className="my-5 text-2xl font-bold text-left">Expression builder</h1>
       <GroupEditor
         group={root}
         onUpdate={(root: Group) => {
           updateRoot(root)
-          //console.log(root)
         }}
       />
       <hr className="my-5" />
-      <div className="font-mono">{getGroupExpression(root)}</div>
+      <div className="font-mono text-left whitespace-pre">{getGroupExpression(root)}</div>
     </>
   )
 }
