@@ -1,5 +1,6 @@
 {
-  "name": "razvod",
+  "name": "expression-builder",
+  "homepage": "https://georgius1024.github.io/expression-builder/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
