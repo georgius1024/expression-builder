@@ -2,7 +2,12 @@ import { ReactElement, ReactNode, useState } from 'react'
 import classNames from 'classnames'
 import { Button, Dropdown } from 'flowbite-react'
 import RuleEditor from '@/components/expressions2/RuleEditor'
-import { defaultRule, defaultGroup, categoryIcon, categoryName } from '@/components/expressions2/utils'
+import {
+  defaultRule,
+  defaultGroup,
+  categoryIcon,
+  categoryName
+} from '@/components/expressions2/utils'
 
 import { ReactSortable } from 'react-sortablejs'
 import trashIcon from '@assets/icons/close.svg'
@@ -123,44 +128,6 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
         props.className
       )}
     >
-      <div className="flex flex-row gap-2">
-        <Dropdown
-          label=""
-          renderTrigger={() => (
-            <Button outline pill size="xs">
-              <img src={plusIcon} className="size-4" />
-            </Button>
-          )}
-        >
-          <Dropdown.Header>
-            <div className="text-md text-left font-bold">Add</div>
-          </Dropdown.Header>
-          {
-            (['customer', 'product', 'order'] as Category[]).map(c => (
-              <Dropdown.Item onClick={() => onAddRule(c)}>
-              <div className="flex flex-row items-center gap-2">
-                <img src={categoryIcon(c)} className="size-4" />
-                {categoryName(c)}
-              </div>
-            </Dropdown.Item>
-            ))
-          }
-          <Dropdown.Divider />
-
-          <Dropdown.Item onClick={onAddGroup}>
-            <div className="flex flex-row items-center gap-2">
-              <img src={groupIcon} className="size-4" />
-              Nested group
-            </div>
-          </Dropdown.Item>
-        </Dropdown>
-
-        <div className="grow" />
-        {props.nested && (
-          <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
-        )}
-      </div>
-
       <ReactSortable
         handle=".handle"
         className={classNames(
@@ -187,7 +154,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
                       onUpdate={onUpdateRule}
                       className="grow"
                     />
-                      <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
+                    <RemoveWidget onClick={() => onRemoveEntry(e.id)} />
                     <img
                       src={dragIcon}
                       className="handle mx-2 w-6 cursor-pointer"
@@ -222,6 +189,42 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           )
         })}
       </ReactSortable>
+
+      <div className="flex flex-row gap-2">
+        <Dropdown
+          label=""
+          renderTrigger={() => (
+            <Button outline pill size="xs">
+              <img src={plusIcon} className="size-4" />
+            </Button>
+          )}
+        >
+          <Dropdown.Header>
+            <div className="text-md text-left font-bold">Add</div>
+          </Dropdown.Header>
+          {(['customer', 'product', 'order'] as Category[]).map((c) => (
+            <Dropdown.Item onClick={() => onAddRule(c)}>
+              <div className="flex flex-row items-center gap-2">
+                <img src={categoryIcon(c)} className="size-4" />
+                {categoryName(c)}
+              </div>
+            </Dropdown.Item>
+          ))}
+          <Dropdown.Divider />
+
+          <Dropdown.Item onClick={onAddGroup}>
+            <div className="flex flex-row items-center gap-2">
+              <img src={groupIcon} className="size-4" />
+              Nested group
+            </div>
+          </Dropdown.Item>
+        </Dropdown>
+
+        <div className="grow" />
+        {props.nested && (
+          <img src={dragIcon} className="handle mx-2 w-6 cursor-pointer" />
+        )}
+      </div>
     </div>
   )
 }

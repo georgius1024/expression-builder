@@ -59,9 +59,9 @@ const defaultValue: Group = {
           operator: 'and',
           field: 'category',
           expression: 'is',
-          not: false,
+          not: true,
           value: 'Service'
-        },
+        }
       ]
     },
     {
@@ -78,7 +78,7 @@ const defaultValue: Group = {
           expression: '>',
           not: false,
           value: 10000
-        },     
+        },
         {
           category: 'order',
           id: 'payment',
@@ -88,7 +88,7 @@ const defaultValue: Group = {
           expression: 'is',
           not: true,
           value: 'Credit'
-        },    
+        }
       ]
     }
   ]
@@ -106,6 +106,7 @@ function App() {
         }}
       />
       <hr className="my-5" />
+      <h2 className="text-left text-xl font-bold">SQL output will be like</h2>
       <div className="font-mono whitespace-pre-wrap text-left">
         {getGroupExpression(root)}
       </div>
