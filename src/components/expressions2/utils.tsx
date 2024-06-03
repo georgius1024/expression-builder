@@ -60,12 +60,6 @@ export function fieldLabel(field: Field): string | undefined {
       return 'Delivery'
     case 'paymentType':
       return 'Payment'
-    case 'URL':
-      return 'Page URL'
-    case 'source':
-      return 'UTM source'
-    case 'campaign':
-      return 'UTM campaign'
   }
   return ucFirst(field)
 }
@@ -136,20 +130,17 @@ export function expressionLabel(expression: Expression): string {
 export function valueType(
   field: Field,
   _expression?: Expression
-): 'text' | 'number' | string[] | undefined {
+): 'text' | 'number' | undefined {
   switch (field) {
     case 'name':
     case 'country':
+    case 'manufacturer':
     default:
       return 'text'
     case 'amount':
     case 'price':
     case 'salesLastMonth':
       return 'number'
-    case 'gender':
-      return ['male', 'female', 'other']
-    case 'event':
-      return ['visited', 'purchased', 'abandoned']
   }
 }
 
@@ -201,7 +192,7 @@ export function getGroupExpression(group: Group, level: number = 0): string {
       if (isLast) {
         return `${pad}${expression}`
       }
-        return `${pad}${expression} ${e.operator} `
+      return `${pad}${expression} ${e.operator} `
     })
   ].join('')
 }

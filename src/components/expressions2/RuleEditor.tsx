@@ -78,6 +78,16 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
             inputType="text"
           />
         )
+      case 'salesLastMonth':
+      case 'price':
+      case 'amount':
+        return (
+          <SingleValueInput
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            inputType="number"
+          />
+        )
       case 'category':
         return (
           <SingleValueSelect
@@ -98,30 +108,20 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
             options={productSkuList()}
           />
         )
-        case 'deliveryType':
-          return (
-            <SingleValueSelect
-              rule={props.rule}
-              onUpdate={props.onUpdate}
-              options={deliveryTypeList()}
-            />
-          )
-          case 'paymentType':
-            return (
-              <SingleValueSelect
-                rule={props.rule}
-                onUpdate={props.onUpdate}
-                options={paymentTypeList()}
-              />
-            )
-      case 'salesLastMonth':
-      case 'price':
-      case 'amount':
+      case 'deliveryType':
         return (
-          <SingleValueInput
+          <SingleValueSelect
             rule={props.rule}
             onUpdate={props.onUpdate}
-            inputType="number"
+            options={deliveryTypeList()}
+          />
+        )
+      case 'paymentType':
+        return (
+          <SingleValueSelect
+            rule={props.rule}
+            onUpdate={props.onUpdate}
+            options={paymentTypeList()}
           />
         )
     }
