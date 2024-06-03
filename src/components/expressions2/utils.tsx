@@ -11,6 +11,7 @@ import { nanoid } from 'nanoid'
 import eventIcon from '@assets/icons/radar.svg'
 import userIcon from '@assets/icons/account.svg'
 import productIcon from '@assets/icons/purse.svg'
+import orderIcon from '@assets/icons/order.svg'
 
 function ucFirst(src: string): string {
   const [first, ...rest] = src
@@ -22,6 +23,8 @@ export function categoryIcon(category: Category): string {
       return userIcon
     case 'product':
       return productIcon
+    case 'order':
+      return orderIcon
     default:
       return eventIcon
   }
@@ -33,8 +36,10 @@ export function categoryName(category: Category): string {
       return 'Customer'
     case 'product':
       return 'Product'
+    case 'order':
+      return 'Order'
     default:
-      return category
+      return ucFirst(category)
   }
 }
 
@@ -43,6 +48,7 @@ export function fieldsList(category: Category): Field[] {
     return ['name', 'category', 'country', 'salesLastMonth']
   if (category === 'product')
     return ['name', 'price', 'manufacturer', 'category', 'sku']
+  if (category === 'order') return ['amount', 'deliveryType', 'paymentType']
   return []
 }
 
@@ -50,6 +56,10 @@ export function fieldLabel(field: Field): string | undefined {
   switch (field) {
     case 'salesLastMonth':
       return 'Last month sales'
+    case 'deliveryType':
+      return 'Delivery'
+    case 'paymentType':
+      return 'Payment'
     case 'URL':
       return 'Page URL'
     case 'source':
@@ -71,9 +81,12 @@ export function expressionsList(
       return ['=', '^=', '$=', '*=']
     case 'category':
     case 'sku':
+    case 'paymentType':
+    case 'deliveryType':
       return ['is']
     case 'age':
     case 'salesLastMonth':
+    case 'amount':
       return ['=', '>', '<']
   }
   return []
@@ -89,6 +102,14 @@ export function productCategories(): string[] {
 
 export function productSkuList(): string[] {
   return ['ABC-124', 'DEF-321', 'IJK-853']
+}
+
+export function deliveryTypeList(): string[] {
+  return ['Standard', 'Priority', 'Overnight', 'Pick-up']
+}
+
+export function paymentTypeList(): string[] {
+  return ['Cash', 'Bank', 'Card', 'Credit']
 }
 
 export function expressionLabel(expression: Expression): string {
@@ -201,6 +222,14 @@ export function defaultValue(
   }
   if (field === 'sku') {
     const [first] = productSkuList()
+    return first
+  }
+  if (field === 'deliveryType') {
+    const [first] = deliveryTypeList()
+    return first
+  }
+  if (field === 'paymentType') {
+    const [first] = deliveryTypeList()
     return first
   }
   const valueInputType = valueType(field, expresion)

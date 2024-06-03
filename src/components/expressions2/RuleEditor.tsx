@@ -18,7 +18,9 @@ import {
   categoryName,
   customerCategories,
   productCategories,
-  productSkuList
+  productSkuList,
+  deliveryTypeList,
+  paymentTypeList
 } from '@/components/expressions2/utils'
 
 type RuleEditorProps = {
@@ -96,8 +98,25 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
             options={productSkuList()}
           />
         )
+        case 'deliveryType':
+          return (
+            <SingleValueSelect
+              rule={props.rule}
+              onUpdate={props.onUpdate}
+              options={deliveryTypeList()}
+            />
+          )
+          case 'paymentType':
+            return (
+              <SingleValueSelect
+                rule={props.rule}
+                onUpdate={props.onUpdate}
+                options={paymentTypeList()}
+              />
+            )
       case 'salesLastMonth':
       case 'price':
+      case 'amount':
         return (
           <SingleValueInput
             rule={props.rule}
@@ -128,7 +147,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
           </div>
         )}
       >
-        {(['customer', 'product'] as Category[]).map((c) => (
+        {(['customer', 'product', 'order'] as Category[]).map((c) => (
           <Dropdown.Item onClick={() => updateCategory(c)}>
             <div className="flex flex-row items-center gap-2">
               <img src={categoryIcon(c)} className="size-4" />
@@ -145,7 +164,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
       >
         {fieldPickerOptions}
       </Select>
-      
+
       {props.rule.field && (
         <ExpressionPicker rule={props.rule} onUpdate={props.onUpdate} />
       )}

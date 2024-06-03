@@ -14,7 +14,7 @@ export type Entry<T extends EntryType> = {
 export type Field = string
 export type Expression = string
 export type Value = string | number | Value[]
-export type Category = 'customer' | 'product'
+export type Category = 'customer' | 'product' | 'order'
 
 export type Rule = Entry<RuleType> & {
   category: Category
