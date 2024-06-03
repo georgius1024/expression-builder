@@ -5,4 +5,4 @@ Builder contains two major components - domain-specific `RuleBuilder` to build s
 
 `RuleBuilder` is domain-specific so for this example it supports inspecting attributes of `Order`, `Customer`, and `Product` entities for an imaginary e-commerce application. In real life, it should reflect domain entities, attributes, etc, and could be potentially more complex.
 
-Please visit then [test site](https://georgius1024.github.io/expression-builder/) to see it working
+Please visit [test site](https://georgius1024.github.io/expression-builder/) to see it working.
