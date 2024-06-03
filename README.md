@@ -1,30 +1,8 @@
-# React + TypeScript + Vite
+# Expression builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The purpose of this small project is to proof-of-concept how a multipurpose real-life expression builder could be built.
+Builder contains two major components - domain-specific `RuleBuilder` to build simple expressions like "order amount is over 1000" and domain-agnostic `GroupBuilder` to organize simple expressions into a powerful builder with switchable `and` and `or` logic, with nested groups of rules, etc. Due to the communicative nature of logical operations, the order of expressions is not significant, but drag-and-drop sorting is available.
 
-Currently, two official plugins are available:
+`RuleBuilder` is domain-specific so for this example it supports inspecting attributes of `Order`, `Customer`, and `Product` entities for an imaginary e-commerce application. In real life, it should reflect domain entities, attributes, etc, and could be potentially more complex.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Please visit then [test site](https://georgius1024.github.io/expression-builder/) to see it working
