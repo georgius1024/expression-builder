@@ -13,9 +13,9 @@ function App() {
 
   return (
     <div className={classNames('absolute inset-0 z-0 bg-red-100')}>
-      <Drawer/>
+      {/* <Drawer/> */}
       <div className="mx-auto max-h-full w-6/12 overflow-y-auto bg-white p-5 drop-shadow-lg">
-        <h1 className="my-5 text-left text-2xl font-bold">
+        <h1 className="mb-2 text-left text-2xl font-bold">
           Expression builder
         </h1>
         <GroupEditor
@@ -24,9 +24,9 @@ function App() {
             updateRoot(root)
           }}
         />
-        <hr className="my-5" />
-        <h2 className="text-left text-xl font-bold">SQL output will be like</h2>
-        <div className="font-mono whitespace-pre-wrap text-left">
+        <hr className="my-2" />
+        <h2 className="text-left text-l font-bold">SQL output will be like</h2>
+        <div className="font-mono text-sm whitespace-pre-wrap text-left">
           {getGroupExpression(root)}
         </div>
       </div>
