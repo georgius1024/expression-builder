@@ -148,7 +148,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
         )}
       >
         {(['customer', 'product', 'order'] as Category[]).map((c) => (
-          <Dropdown.Item onClick={() => updateCategory(c)}>
+          <Dropdown.Item onClick={() => updateCategory(c)} key={c}>
             <div className="flex flex-row items-center gap-2">
               <img src={categoryIcon(c)} className="size-4" />
               {categoryName(c)}

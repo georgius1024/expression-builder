@@ -1,116 +1,36 @@
 import { useState } from 'react'
-
-import './App.scss'
-import type { Group } from '@/components/expressions2/types'
+import classNames from 'classnames'
 import GroupEditor from '@/components/expressions2/GroupEditor'
+import Drawer from '@/components/Drawer'
 import { getGroupExpression } from './components/expressions2/utils'
+import defaultValue from '@/default-group'
 
-const defaultValue: Group = {
-  id: 'root',
-  type: 'group',
-  operator: 'and',
-  entries: [
-    {
-      id: 'customer',
-      type: 'group',
-      operator: 'and',
-      entries: [
-        {
-          category: 'customer',
-          id: 'domestic',
-          type: 'rule',
-          operator: 'and',
-          field: 'country',
-          expression: '=',
-          not: false,
-          value: 'USA'
-        },
-        {
-          category: 'customer',
-          id: 'valuable',
-          type: 'rule',
-          operator: 'and',
-          field: 'category',
-          expression: 'is',
-          not: false,
-          value: 'Valuable'
-        }
-      ]
-    },
-    {
-      id: 'product',
-      type: 'group',
-      operator: 'and',
-      entries: [
-        {
-          category: 'product',
-          id: 'price',
-          type: 'rule',
-          operator: 'and',
-          field: 'price',
-          expression: '>',
-          not: false,
-          value: 2000
-        },
-        {
-          category: 'product',
-          id: 'med',
-          type: 'rule',
-          operator: 'and',
-          field: 'category',
-          expression: 'is',
-          not: true,
-          value: 'Service'
-        }
-      ]
-    },
-    {
-      id: 'order',
-      type: 'group',
-      operator: 'and',
-      entries: [
-        {
-          category: 'order',
-          id: 'amount',
-          type: 'rule',
-          operator: 'or',
-          field: 'amount',
-          expression: '>',
-          not: false,
-          value: 10000
-        },
-        {
-          category: 'order',
-          id: 'payment',
-          type: 'rule',
-          operator: 'and',
-          field: 'paymentType',
-          expression: 'is',
-          not: true,
-          value: 'Credit'
-        }
-      ]
-    }
-  ]
-}
+import type { Group } from '@/components/expressions2/types'
+import './App.scss'
+
 function App() {
   const [root, updateRoot] = useState<Group>(defaultValue)
 
   return (
-    <>
-      <h1 className="my-5 text-left text-2xl font-bold">Expression builder</h1>
-      <GroupEditor
-        group={root}
-        onUpdate={(root: Group) => {
-          updateRoot(root)
-        }}
-      />
-      <hr className="my-5" />
-      <h2 className="text-left text-xl font-bold">SQL output will be like</h2>
-      <div className="font-mono whitespace-pre-wrap text-left">
-        {getGroupExpression(root)}
+    <div className={classNames('absolute inset-0 z-0 bg-red-100')}>
+      {/* <Drawer/> */}
+      <div className="mx-auto max-h-full w-6/12 overflow-y-auto bg-white p-5 drop-shadow-lg">
+        <h1 className="mb-2 text-left text-2xl font-bold">
+          Expression builder
+        </h1>
+        <GroupEditor
+          group={root}
+          onUpdate={(root: Group) => {
+            updateRoot(root)
+          }}
+        />
+        <hr className="my-2" />
+        <h2 className="text-left text-l font-bold">SQL output will be like</h2>
+        <div className="font-mono text-sm whitespace-pre-wrap text-left">
+          {getGroupExpression(root)}
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 

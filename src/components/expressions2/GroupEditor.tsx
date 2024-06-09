@@ -203,7 +203,7 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
             <div className="text-md text-left font-bold">Add</div>
           </Dropdown.Header>
           {(['customer', 'product', 'order'] as Category[]).map((c) => (
-            <Dropdown.Item onClick={() => onAddRule(c)}>
+            <Dropdown.Item onClick={() => onAddRule(c)} key={c}>
               <div className="flex flex-row items-center gap-2">
                 <img src={categoryIcon(c)} className="size-4" />
                 {categoryName(c)}

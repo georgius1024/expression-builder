@@ -27,7 +27,7 @@ export default function SingleValueSelect(
       required
     >
       {props.options.map((e) => (
-        <option value={e}>{e}</option>
+        <option value={e} key={e}>{e}</option>
       ))}
     </Select>
   )
