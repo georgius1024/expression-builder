@@ -141,7 +141,7 @@ export default function RuleEditor(props: RuleEditorProps): ReactElement {
           <div className="flex select-none place-content-center rounded-full border border-solid border-gray-300 p-2">
             <img
               src={categoryIcon(props.rule.category)}
-              className="size-5"
+              className="w-5"
               alt=""
             />
           </div>
