@@ -195,13 +195,10 @@ export default function GroupEditor(props: GroupEditorProps): ReactElement {
           label=""
           renderTrigger={() => (
             <Button outline pill size="xs">
-              <img src={plusIcon} className="size-4" />
+              <img src={plusIcon} className="size-4" /> Add
             </Button>
           )}
         >
-          <Dropdown.Header>
-            <div className="text-md text-left font-bold">Add</div>
-          </Dropdown.Header>
           {(['customer', 'product', 'order'] as Category[]).map((c) => (
             <Dropdown.Item onClick={() => onAddRule(c)} key={c}>
               <div className="flex flex-row items-center gap-2">
