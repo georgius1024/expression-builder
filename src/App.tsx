@@ -10,11 +10,12 @@ import './App.scss'
 
 function App() {
   const [root, updateRoot] = useState<Group>(defaultValue)
-
+  const expression = getGroupExpression(root)
   return (
-    <div className={classNames('absolute inset-0 z-0 bg-red-100')}>
-      {/* <Drawer/> */}
-      <div className="mx-auto max-h-full w-6/12 overflow-y-auto bg-white p-5 drop-shadow-lg">
+    <div
+      className={classNames('absolute inset-0 z-0 overflow-y-auto bg-red-100')}
+    >
+      <div className="mx-auto my-2 w-6/12 bg-white p-5 drop-shadow-lg">
         <h1 className="mb-2 text-left text-2xl font-bold">
           Expression builder
         </h1>
@@ -24,11 +25,17 @@ function App() {
             updateRoot(root)
           }}
         />
-        <hr className="my-2" />
-        <h2 className="text-left text-l font-bold">SQL output will be like</h2>
-        <div className="font-mono text-sm whitespace-pre-wrap text-left">
-          {getGroupExpression(root)}
-        </div>
+        {expression && (
+          <>
+            <hr className="my-2" />
+            <h2 className="text-l text-left font-bold">
+              SQL output will be like
+            </h2>
+            <div className="font-mono whitespace-pre-wrap text-left text-sm">
+              {expression}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
